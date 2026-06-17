@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true" class="onboarding-content">
+  <div class="onboarding-wrapper">
+    <!-- Header -->
+    <div class="onboarding-header">
+      <span class="brand-logo">AlloChef</span>
+      <button class="skip-btn" *ngIf="currentSlide < slides.length - 1 && !preferencesSaved" (click)="setPreferencesSaved(true)">
+        Passer
+      </button>
+    </div>
+
+    <!-- Slide View -->
+    <div class="slide-container" *ngIf="!preferencesSaved">
+      <div class="slide-illustration">{{ slides[currentSlide].icon }}</div>
+      <h2 class="slide-title">{{ slides[currentSlide].title }}</h2>
+      <p class="slide-subtitle">{{ slides[currentSlide].subtitle }}</p>
+
+      <!-- Slide indicators -->
+      <div class="indicators">
+        <div *ngFor="let slide of slides; let i = index" class="dot" [class.active]="i === currentSlide"></div>
+      </div>
+
+      <ion-button class="action-btn" (click)="handleNext()" expand="block">
+        Continuer <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Personalization Quiz View -->
+    <div class="personalization-container" *ngIf="preferencesSaved">
+      <h2 class="slide-title">Personnalisons votre expérience</h2>
+      <p class="slide-subtitle">Quel est votre niveau actuel en cuisine ?</p>
+
+      <div class="level-selectors">
+        <div class="level-card" [class.selected]="cookingLevel === 'debutant'" (click)="setCookingLevel('debutant')">
+          <span class="level-icon"></span>
+          <div class="level-info">
+            <h3>Débutant</h3>
+            <p>Je sais faire cuire des pâtes et des œufs.</p>
+          </div>
+        </div>
+
+        <div class="level-card" [class.selected]="cookingLevel === 'intermediaire'" (click)="setCookingLevel('intermediaire')">
+          <span class="level-icon"></span>
+          <div class="level-info">
+            <h3>Intermédiaire</h3>
+            <p>Je cuisine régulièrement des plats simples.</p>
+          </div>
+        </div>
+
+        <div class="level-card" [class.selected]="cookingLevel === 'avance'" (click)="setCookingLevel('avance')">
+          <span class="level-icon"></span>
+          <div class="level-info">
+            <h3>Avancé / Chef</h3>
+            <p>J'expérimente avec de grandes techniques.</p>
+          </div>
+        </div>
+      </div>
+
+      <ion-button class="action-btn-start" (click)="finishOnboarding()" expand="block">
+        Commencer l'aventure <ion-icon name="checkmark-circle" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

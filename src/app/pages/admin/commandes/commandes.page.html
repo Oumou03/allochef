@@ -1,0 +1,40 @@
+<app-admin-shell title="Commandes" section="orders" [loading]="loading" (refresh)="loadOrders()">
+  <div class="admin-card-list" *ngIf="orders.length; else emptyOrders">
+    <div class="admin-card admin-order-card" *ngFor="let order of orders">
+      <div class="admin-card-body">
+        <h2>{{ order.recipe_name }}</h2>
+        <p>{{ order.date }} · {{ order.item_count }} article{{ order.item_count !== 1 ? 's' : '' }}</p>
+        <div class="admin-card-meta">
+          <span class="admin-badge" [ngClass]="getStatusClass(order.status)">{{ getStatusLabel(order.status) }}</span>
+          <span class="admin-order-total">{{ formatPrice(order.total) }}</span>
+        </div>
+        <ul class="admin-order-items" *ngIf="order.items?.length">
+          <li *ngFor="let item of order.items">
+            {{ item.name }} — {{ item.quantity }} {{ item.unit }} · {{ formatPrice(item.price) }}
+          </li>
+        </ul>
+      </div>
+      <div class="admin-card-actions">
+        <ion-select
+          class="admin-select"
+          [value]="order.status"
+          interface="popover"
+          (ionChange)="updateStatus(order, $any($event.detail.value))"
+        >
+          <ion-select-option value="pending">En attente</ion-select-option>
+          <ion-select-option value="confirmed">Confirmée</ion-select-option>
+          <ion-select-option value="preparing">En préparation</ion-select-option>
+          <ion-select-option value="delivered">Livrée</ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyOrders>
+    <div class="admin-empty">
+      <ion-icon name="cart-outline"></ion-icon>
+      <h3>Aucune commande</h3>
+      <p>Les commandes utilisateurs apparaîtront ici.</p>
+    </div>
+  </ng-template>
+</app-admin-shell>

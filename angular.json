@@ -1,0 +1,112 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "allochef": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/allochef",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "node_modules/@ionic/angular/css/core.css",
+              "node_modules/@ionic/angular/css/normalize.css",
+              "node_modules/@ionic/angular/css/structure.css",
+              "node_modules/@ionic/angular/css/typography.css",
+              "node_modules/@ionic/angular/css/display.css",
+              "src/theme/variables.css",
+              "src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kb",
+                  "maximumError": "16kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "host": "localhost",
+            "port": 8101
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "allochef:build:production"
+            },
+            "development": {
+              "browserTarget": "allochef:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "node_modules/@ionic/angular/css/core.css",
+              "node_modules/@ionic/angular/css/normalize.css",
+              "node_modules/@ionic/angular/css/structure.css",
+              "node_modules/@ionic/angular/css/typography.css",
+              "node_modules/@ionic/angular/css/display.css",
+              "src/theme/variables.css",
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  }
+}

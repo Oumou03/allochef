@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-container">
+    <div class="auth-header">
+      <span class="auth-logo">AlloChef</span>
+      <h2>Content de vous revoir !</h2>
+      <p>Connectez-vous pour continuer votre apprentissage.</p>
+    </div>
+
+    <form (ngSubmit)="handleLogin()" class="auth-form">
+      <div class="input-group">
+        <label>Adresse Email</label>
+        <div class="input-wrapper">
+          <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+          <ion-input 
+            type="email" 
+            placeholder="exemple@email.com" 
+            [(ngModel)]="email"
+            name="email"
+            inputmode="email"
+            autocomplete="email"
+            required 
+          ></ion-input>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="label-row">
+          <label>Mot de passe</label>
+          <button type="button" class="forgot-link" (click)="handleForgotPassword()">Oublié ?</button>
+        </div>
+        <div class="input-wrapper">
+          <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+          <ion-input 
+            type="password" 
+            placeholder="••••••••" 
+            [(ngModel)]="password"
+            name="password"
+            required 
+          ></ion-input>
+        </div>
+      </div>
+
+      <ion-button type="submit" expand="block" class="submit-btn" [disabled]="loading">
+        {{ loading ? 'Connexion...' : 'Se connecter' }} <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      </ion-button>
+    </form>
+
+    <div class="auth-divider">
+      <span>OU</span>
+    </div>
+
+    <ion-button fill="outline" expand="block" class="google-btn" (click)="handleGoogleLogin()">
+      <ion-icon name="logo-google" slot="start"></ion-icon> Continuer avec Google
+    </ion-button>
+
+    <div class="auth-footer">
+      <p>Nouveau sur AlloChef ? <button type="button" class="auth-link" (click)="goToRegister()">Créer un compte</button></p>
+      <p style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
+        Vous êtes un professionnel ? <button type="button" class="auth-link chef-link" (click)="goToLoginChef()">Accès Chef 👨‍🍳</button>
+      </p>
+    </div>
+  </div>
+</ion-content>

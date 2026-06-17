@@ -1,0 +1,410 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar class="premium-toolbar">
+    <div class="profile-header-container">
+      <h2>{{ role === 'chef' ? 'Espace Pro Chef' : role === 'admin' ? 'Espace Admin' : 'Mon Profil' }}</h2>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="profile-content">
+  <div *ngIf="loadingProfile" style="display: flex; justify-content: center; align-items: center; min-height: 50vh;">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <div class="profile-wrapper" *ngIf="!loadingProfile && !isLoggedIn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; padding: 40px 20px;">
+    <div style="font-size: 64px; margin-bottom: 20px;"></div>
+    <h2 style="margin: 0 0 10px; font-size: 22px; font-weight: bold;">Bienvenue sur AlloChef</h2>
+    <p style="opacity: 0.7; margin-bottom: 24px; max-width: 300px;">Connectez-vous pour accéder à votre profil, vos recettes favorites et votre espace chef.</p>
+    <ion-button expand="block" style="max-width: 280px; width: 100%;" (click)="goToLogin()">
+      <ion-icon name="log-in-outline" slot="start"></ion-icon> Se connecter
+    </ion-button>
+    <ion-button expand="block" fill="outline" style="max-width: 280px; width: 100%; margin-top: 10px;" (click)="goToRegister()">
+      Créer un compte
+    </ion-button>
+  </div>
+
+  <div class="profile-wrapper" *ngIf="!loadingProfile && isLoggedIn">
+    <!-- User Card -->
+    <div class="user-profile-card">
+      <div class="user-avatar-wrapper">
+        <img [src]="currentUser.avatar" [alt]="currentUser.name" />
+        <span class="premium-status-badge" [class.gold]="role === 'chef' || role === 'admin'">
+          {{ role === 'chef' ? 'PRO Chef' : role === 'admin' ? 'Admin' : 'Membre' }}
+        </span>
+      </div>
+      <h3>{{ currentUser.name }}</h3>
+      <p class="user-email">{{ currentUser.email }}</p>
+      <p class="user-bio" *ngIf="currentUser.bio">{{ currentUser.bio }}</p>
+      <p class="user-bio" *ngIf="!currentUser.bio" style="opacity: 0.5; font-style: italic;">Ajoutez une bio pour personnaliser votre profil</p>
+      
+      <ion-button fill="outline" size="small" class="edit-profile-btn" (click)="openEditModal()">
+        <ion-icon name="create-outline" slot="start"></ion-icon> Modifier le Profil
+      </ion-button>
+    </div>
+
+    <!-- Cooking Stats Row -->
+    <div class="profile-stats-row">
+      <div class="stat-box" *ngIf="role !== 'user'">
+        <span class="stat-num">{{ followedCount }}</span>
+        <span class="stat-label">Chefs Suivis</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">{{ cookingLevel }}</span>
+        <span class="stat-label">Niveau</span>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div *ngIf="role === 'admin'" style="background: rgba(220, 53, 69, 0.12); border: 1px solid rgba(220, 53, 69, 0.35); border-radius: 20px; padding: 20px; margin-bottom: 25px;">
+      <h3 style="margin: 0 0 8px; color: #dc3545;">Panneau d'administration</h3>
+      <p style="margin: 0 0 12px; font-size: 13px; opacity: 0.85;">Gérez les utilisateurs, chefs, recettes et commandes.</p>
+      <ion-button color="danger" expand="block" (click)="goToAdmin()">
+        Ouvrir l'administration
+      </ion-button>
+    </div>
+
+    <!-- SPECIAL CHEF CREATOR PANEL -->
+    <div class="chef-creator-panel" *ngIf="role === 'chef'" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(20, 20, 20, 0.4) 100%); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px; padding: 20px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 24px;"></span>
+        <div>
+          <h3 style="margin: 0; font-size: 18px; font-weight: bold; color: var(--ion-color-secondary);">Espace Créateur Chef</h3>
+          <p style="margin: 0; font-size: 12px; opacity: 0.8;">Publiez des recettes et importez vos propres vidéos.</p>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+        <ion-button color="primary" (click)="openSauceListModal()">Voir mes sauces</ion-button>
+        <ion-button color="secondary" (click)="openSauceModal()">
+          <ion-icon name="add-circle-outline" slot="start"></ion-icon> Sauce
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Chef specialty -->
+    <ng-container *ngIf="role === 'chef' && chefSpecialty">
+      <div class="profile-section-title">Spécialité</div>
+      <div class="level-indicator-card">
+        <p class="level-icon-badge"></p>
+        <div>
+          <h4>{{ chefSpecialty }}</h4>
+          <p>Votre domaine d'expertise sur AlloChef.</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Quick Info Menu -->
+    <ng-container *ngIf="role !== 'chef'">
+      <div class="profile-section-title">Niveau de Cuisine</div>
+      <div class="level-indicator-card">
+        <p class="level-icon-badge"></p>
+        <div>
+          <h4>{{ cookingLevel }}</h4>
+          <p>Niveau défini lors de votre onboarding. Vos portions sont adaptées à ce niveau.</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Settings Menu Options -->
+    <div class="profile-section-title">Paramètres de l'Application</div>
+    
+    <div class="settings-options-list">
+      <div class="setting-item">
+        <div class="setting-left">
+          <ion-icon name="moon-outline" class="setting-icon dark-mode"></ion-icon>
+          <span>Mode Sombre</span>
+        </div>
+        <ion-toggle [checked]="darkMode" (ionChange)="handleDarkModeToggle($event)" color="primary"></ion-toggle>
+      </div>
+
+      <div class="setting-item" (click)="goToNotifications()">
+        <div class="setting-left">
+          <ion-icon name="notifications-outline" class="setting-icon"></ion-icon>
+          <span>Notifications Push</span>
+        </div>
+        <ion-icon name="shield-checkmark-outline" class="chevron-right"></ion-icon>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-left">
+          <ion-icon name="star" class="setting-icon premium"></ion-icon>
+          <span>Gérer l'Abonnement</span>
+        </div>
+        <span class="premium-pill-active">Actif</span>
+      </div>
+    </div>
+
+    <ion-button expand="block" fill="clear" color="danger" class="logout-btn" (click)="handleLogout()" style="margin-top: 20px;">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon> Se déconnecter
+    </ion-button>
+  </div>
+</ion-content>
+
+<!-- MODALS hors ion-content pour un affichage fiable -->
+  <ion-modal [isOpen]="showEditModal" (didDismiss)="showEditModal = false">
+    <ng-template>
+      <div class="modal-wrapper-edit" style="padding: 24px; display: flex; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="margin: 0; font-weight: bold;">Modifier le Profil</h2>
+          <button (click)="showEditModal = false" style="background: rgba(255,255,255,0.1); border: none; border-radius: 50%; padding: 8px; display: flex; color: #fff;">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <!-- Formulaire Edit Profil -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="text-align: center;">
+            <img
+              [src]="avatarPreviewUrl || currentUser.avatar"
+              alt="Avatar"
+              style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--ion-color-primary);"
+            />
+          </div>
+          <ion-item>
+            <ion-label position="floating">Nom</ion-label>
+            <ion-input [(ngModel)]="currentUser.name" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Bio</ion-label>
+            <ion-textarea
+              [(ngModel)]="currentUser.bio"
+              rows="3"
+              maxlength="200"
+              placeholder="Parlez de vous en quelques mots..."
+            ></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label>Photo de profil</ion-label>
+            <input type="file" accept="image/*" (change)="onAvatarSelected($event)" />
+          </ion-item>
+          <ion-button expand="block" (click)="saveProfile()" [disabled]="savingProfile">
+            {{ savingProfile ? 'Enregistrement...' : 'Enregistrer' }}
+          </ion-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <!-- MODAL AJOUT RECETTE -->
+  <ion-modal [isOpen]="showRecipeModal" (didDismiss)="closeRecipeModal()">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title>{{ editingSauceId ? 'Modifier la recette' : 'Ajouter une recette' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeRecipeModal()">Fermer</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <p style="opacity: 0.75; margin: 0 0 16px; font-size: 14px;">
+          Ces informations seront associées à la sauce « {{ newSauce.title }} ».
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <ion-item>
+            <ion-label position="floating">Temps de cuisson (minutes)</ion-label>
+            <ion-input type="number" [(ngModel)]="newRecipe.duration"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Ingrédients et quantités (1 par ligne)</ion-label>
+            <ion-textarea
+              [(ngModel)]="newRecipe.ingredientsText"
+              rows="5"
+              placeholder="Poulet | 500 | g&#10;Oignons | 3 | pcs&#10;Sel | 1 | c.à.c"
+            ></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Ustensiles nécessaires (1 par ligne)</ion-label>
+            <ion-textarea
+              [(ngModel)]="newRecipe.utensilsText"
+              rows="3"
+              placeholder="Casserole&#10;Mixeur&#10;Planche à découper"
+            ></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Étapes de préparation (1 par ligne)</ion-label>
+            <ion-textarea
+              [(ngModel)]="newRecipe.stepsText"
+              rows="5"
+              placeholder="Couper les oignons&#10;Faire mariner le poulet&#10;..."
+            ></ion-textarea>
+          </ion-item>
+          <ion-button expand="block" (click)="addRecipeToSauce()">
+            {{ editingSauceId ? 'Enregistrer la recette' : 'Ajouter la recette' }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- MODAL AJOUT / MODIFICATION SAUCE -->
+  <ion-modal [isOpen]="showSauceModal" (didDismiss)="closeSauceModal()">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title>{{ editingSauceId ? 'Modifier la sauce' : 'Ajouter une sauce' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeSauceModal()">Fermer</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="sauce-form-stack">
+          <ion-item>
+            <ion-label position="floating">Titre de la sauce</ion-label>
+            <ion-input [(ngModel)]="newSauce.title" placeholder="Ex: Sauce Arachide"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Catégorie de la sauce</ion-label>
+            <ion-select [(ngModel)]="newSauce.category" interface="action-sheet" placeholder="Choisir une catégorie">
+              <ion-select-option *ngFor="let cat of sauceCategories" [value]="cat.id">
+                {{ cat.emoji }} {{ cat.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <div class="sauce-media-field">
+            <label class="sauce-media-label">
+              <ion-icon name="image-outline"></ion-icon>
+              Photo de couverture
+            </label>
+            <div class="sauce-media-preview" *ngIf="sauceImagePreviewUrl">
+              <img [src]="sauceImagePreviewUrl" alt="Aperçu de la sauce" />
+            </div>
+            <input type="file" accept="image/*" (change)="onSauceImageSelected($event)" />
+            <p class="sauce-media-hint">JPG, PNG ou WEBP</p>
+          </div>
+
+          <div class="sauce-media-field">
+            <label class="sauce-media-label">
+              <ion-icon name="videocam-outline"></ion-icon>
+              Vidéos de la sauce
+            </label>
+            <input type="file" accept="video/*" multiple (change)="onSauceVideosSelected($event)" />
+            <p class="sauce-media-hint">MP4, MOV ou WEBM — vous pouvez en ajouter plusieurs</p>
+
+            <div class="sauce-media-list" *ngIf="getExistingVideoCount()">
+              <p class="sauce-media-list-title">Vidéos enregistrées</p>
+              <div class="sauce-media-chip" *ngFor="let url of existingVideoUrls; let i = index">
+                <span>Vidéo {{ i + 1 }}</span>
+                <button type="button" (click)="removeExistingVideo(i)">
+                  <ion-icon name="close-outline"></ion-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="sauce-media-list" *ngIf="getPendingVideoCount()">
+              <p class="sauce-media-list-title">Nouvelles vidéos à importer</p>
+              <div class="sauce-media-chip pending" *ngFor="let file of selectedSauceVideoFiles; let i = index">
+                <span>{{ file.name }}</span>
+                <button type="button" (click)="removePendingVideo(i)">
+                  <ion-icon name="close-outline"></ion-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sauce-recipe-summary" [class.ready]="recipeAddedToSauce || getDraftIngredientCount() > 0">
+            <div class="sauce-recipe-summary-head">
+              <ion-icon name="book-outline"></ion-icon>
+              <strong>Recette associée</strong>
+            </div>
+            <p *ngIf="recipeAddedToSauce || getDraftIngredientCount() > 0">
+              {{ newSauce.duration }} min · {{ getDraftIngredientCount() }} ingrédient(s) · {{ getDraftStepCount() }} étape(s)
+            </p>
+            <p *ngIf="!recipeAddedToSauce && !getDraftIngredientCount()" class="sauce-recipe-empty">
+              Ajoutez la recette (ingrédients, ustensiles et étapes) pour finaliser la sauce.
+            </p>
+          </div>
+
+          <ion-button fill="outline" expand="block" color="secondary" (click)="openRecipeModalFromSauce()">
+            <ion-icon name="restaurant-outline" slot="start"></ion-icon>
+            {{ (recipeAddedToSauce || getDraftIngredientCount()) ? 'Modifier la recette' : 'Ajouter la recette' }}
+          </ion-button>
+
+          <ion-button color="primary" expand="block" (click)="saveSauce()" [disabled]="savingProfile || uploadingSauceMedia">
+            {{ uploadingSauceMedia ? 'Import des médias...' : (savingProfile ? 'Enregistrement...' : (editingSauceId ? 'Enregistrer la sauce' : 'Publier la sauce')) }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="showSaucesListModal" (didDismiss)="closeSaucesListModal()" class="chef-sauces-modal">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title>Mes sauces</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="openSauceModal(); closeSaucesListModal()">
+              <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button (click)="closeSaucesListModal()">Fermer</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div *ngIf="loadingSaucesList" class="sauces-list-loading">
+          <ion-spinner name="crescent" color="primary"></ion-spinner>
+          <p>Chargement de vos sauces...</p>
+        </div>
+
+        <div *ngIf="!loadingSaucesList && !sauces.length" class="sauces-list-empty">
+          <p>Aucune sauce pour le moment.</p>
+          <ion-button fill="outline" (click)="closeSaucesListModal(); openSauceModal()">Ajouter une sauce</ion-button>
+        </div>
+
+        <div class="chef-sauce-manage-list" *ngIf="!loadingSaucesList && sauces.length">
+          <article class="chef-sauce-manage-card" *ngFor="let sauce of sauces">
+            <div class="chef-sauce-manage-main">
+              <img [src]="sauce.image_url || 'assets/placeholder.jpg'" [alt]="sauce.title" />
+              <div>
+                <h3>{{ sauce.title }}</h3>
+                <p>{{ getCategoryLabel(sauce.category) }} · {{ sauce.duration }} min · {{ sauce.ingredients?.length || 0 }} ingrédients</p>
+                <p class="sauce-stats-line">
+                  <ion-icon name="eye-outline"></ion-icon> {{ getSauceViews(sauce.id) }} vues ·
+                  <ion-icon name="heart"></ion-icon> {{ getSauceLikes(sauce.id) }} likes
+                </p>
+              </div>
+            </div>
+
+            <div class="chef-sauce-manage-actions">
+              <ion-button size="small" fill="outline" color="medium" (click)="toggleSauceComments(sauce.id, $event)">
+                Commentaires
+              </ion-button>
+              <ion-button size="small" fill="outline" color="primary" (click)="editSauce(sauce, $event)">
+                <ion-icon name="create-outline" slot="start"></ion-icon> Modifier
+              </ion-button>
+              <ion-button size="small" fill="outline" color="danger" (click)="deleteSauce(sauce.id, $event)">
+                <ion-icon name="trash-outline" slot="start"></ion-icon> Supprimer
+              </ion-button>
+            </div>
+
+            <div class="sauce-comments-panel" *ngIf="expandedCommentsSauceId === sauce.id">
+              <div *ngIf="!getSauceComments(sauce.id).length" class="sauce-comments-empty">
+                Aucun commentaire pour cette sauce.
+              </div>
+              <div *ngFor="let comment of getSauceComments(sauce.id)" class="chef-comment-block">
+                <p><strong>{{ comment.user?.name || 'Utilisateur' }} :</strong> {{ comment.content }}</p>
+                <p *ngIf="comment.chef_reply" class="chef-reply-line">
+                  <strong>Votre réponse :</strong> {{ comment.chef_reply }}
+                </p>
+                <div *ngIf="!comment.chef_reply" class="chef-reply-form">
+                  <ion-textarea
+                    [(ngModel)]="replyDrafts[comment.id]"
+                    rows="2"
+                    placeholder="Répondre à ce commentaire..."
+                  ></ion-textarea>
+                  <ion-button
+                    size="small"
+                    color="secondary"
+                    (click)="submitChefReply(comment)"
+                    [disabled]="savingReplyId === comment.id"
+                  >
+                    {{ savingReplyId === comment.id ? 'Envoi...' : 'Répondre' }}
+                  </ion-button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>

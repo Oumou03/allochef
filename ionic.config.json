@@ -1,0 +1,10 @@
+{
+  "name": "allochef",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom",
+  "serve": {
+    "script": "npm run start"
+  }
+}

@@ -1,0 +1,37 @@
+<app-admin-shell title="Utilisateurs" section="users" [loading]="loading" (refresh)="loadUsers()">
+  <div class="admin-card-list" *ngIf="users.length; else emptyUsers">
+    <div class="admin-card" *ngFor="let user of users">
+      <div class="admin-avatar" style="display:flex;align-items:center;justify-content:center;background:var(--premium-gradient-primary);color:#fff;font-weight:800;">
+        {{ getInitials(user.name) }}
+      </div>
+      <div class="admin-card-body">
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.email }}</p>
+        <div class="admin-card-meta">
+          <span class="admin-badge" [ngClass]="getRoleClass(user)">{{ getRoleLabel(user) }}</span>
+          <span class="admin-badge danger" *ngIf="user.is_banned">Banni</span>
+        </div>
+      </div>
+      <div class="admin-card-actions">
+        <ion-button
+          size="small"
+          fill="outline"
+          [color]="user.is_banned ? 'success' : 'danger'"
+          (click)="toggleBan(user)"
+          [disabled]="user.is_admin"
+        >
+          <ion-icon [name]="user.is_banned ? 'checkmark-circle-outline' : 'ban-outline'" slot="start"></ion-icon>
+          {{ user.is_banned ? 'Débannir' : 'Bannir' }}
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyUsers>
+    <div class="admin-empty">
+      <ion-icon name="people-outline"></ion-icon>
+      <h3>Aucun utilisateur</h3>
+      <p>Les comptes inscrits apparaîtront ici.</p>
+    </div>
+  </ng-template>
+</app-admin-shell>

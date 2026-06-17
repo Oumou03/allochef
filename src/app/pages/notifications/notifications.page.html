@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notifications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h2>Notifications</h2>
+
+  <ion-refresher slot="fixed" (ionRefresh)="loadNotifications($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list *ngIf="!loading && notifications.length">
+    <ion-item *ngFor="let notification of notifications" detail="false" (click)="openNotification(notification)">
+      <ion-label>
+        <h3>{{ notification.title }}</h3>
+        <p>{{ notification.body }}</p>
+        <small>{{ formatDate(notification.created_at) }}</small>
+      </ion-label>
+      <ion-badge *ngIf="!notification.is_read" color="primary">Nouveau</ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="!loading && !notifications.length" class="empty-state">
+    <p>Aucune notification pour le moment.</p>
+  </div>
+
+  <ion-skeleton-text *ngIf="loading" animated style="width: 100%; height: 80px;"></ion-skeleton-text>
+</ion-content>

@@ -1,0 +1,71 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-container">
+    <div class="auth-header">
+      <span class="auth-logo">AlloChef</span>
+      <h2>Rejoignez AlloChef</h2>
+      <p>Commencez à cuisiner comme un chef professionnel dès aujourd'hui.</p>
+    </div>
+
+    <form (ngSubmit)="handleRegister()" class="auth-form">
+      <div class="input-group">
+        <label>Nom complet</label>
+        <div class="input-wrapper">
+          <ion-icon name="person-outline" class="input-icon"></ion-icon>
+          <ion-input 
+            type="text" 
+            placeholder="Jean Dupont" 
+            [(ngModel)]="name"
+            name="name"
+            required 
+          ></ion-input>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Adresse Email</label>
+        <div class="input-wrapper">
+          <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+          <ion-input 
+            type="email" 
+            placeholder="exemple@email.com" 
+            [(ngModel)]="email"
+            name="email"
+            inputmode="email"
+            autocomplete="email"
+            required 
+          ></ion-input>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <div class="input-wrapper">
+          <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+          <ion-input 
+            type="password" 
+            placeholder="Min. 8 caractères" 
+            [(ngModel)]="password"
+            name="password"
+            required 
+          ></ion-input>
+        </div>
+      </div>
+
+      <ion-button type="submit" expand="block" class="submit-btn" [disabled]="loading">
+        {{ loading ? 'Création...' : 'Créer un compte' }} <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      </ion-button>
+    </form>
+
+    <div class="auth-divider">
+      <span>OU</span>
+    </div>
+
+    <ion-button fill="outline" expand="block" class="google-btn" (click)="handleGoogleRegister()">
+      <ion-icon name="logo-google" slot="start"></ion-icon> S'inscrire avec Google
+    </ion-button>
+
+    <div class="auth-footer">
+      <p>Vous avez déjà un compte ? <button type="button" class="auth-link" (click)="goToLogin()">Se connecter</button></p>
+    </div>
+  </div>
+</ion-content>

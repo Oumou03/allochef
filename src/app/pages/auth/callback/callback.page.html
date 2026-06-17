@@ -1,0 +1,14 @@
+<ion-content class="auth-content">
+  <div class="auth-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; gap: 16px;">
+    <ng-container *ngIf="!errorMessage">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Connexion en cours...</p>
+    </ng-container>
+
+    <ng-container *ngIf="errorMessage">
+      <h2>Connexion échouée</h2>
+      <p>{{ errorMessage }}</p>
+      <ion-button (click)="goToLogin()">Retour à la connexion</ion-button>
+    </ng-container>
+  </div>
+</ion-content>

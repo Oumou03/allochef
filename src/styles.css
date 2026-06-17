@@ -1,0 +1,232 @@
+/* Global Styles */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Ionic Overrides */
+ion-button {
+  --border-radius: 8px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+ion-card {
+  --border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+ion-input {
+  --padding-start: 15px;
+  --padding-end: 15px;
+}
+
+ion-toolbar {
+  --background: var(--premium-gradient-primary);
+  --color: white;
+}
+
+ion-title {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.p-20 {
+  padding: 20px;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Loading States */
+ion-spinner {
+  --color: var(--ion-color-primary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow-pulse {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-in-out;
+}
+
+html,
+body,
+ion-app,
+app-root {
+  height: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  background: var(--ion-background-color);
+}
+
+/* Toutes les pages Ionic — plein écran mobile (admin, auth, etc.) */
+ion-router-outlet > .ion-page {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  height: 100dvh;
+}
+
+ion-router-outlet > .ion-page.ion-page-hidden {
+  display: none !important;
+}
+
+/* Pages actives dans ion-tabs */
+ion-tabs .tabs-inner ion-router-outlet > .ion-page {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+}
+
+ion-tabs .tabs-inner ion-router-outlet > .ion-page.ion-page-hidden {
+  display: none !important;
+}
+
+/* Scrolling */
+ion-content {
+  --overflow: auto;
+}
+
+/* Scrolling — padding bas réservé à la tab bar uniquement dans les onglets */
+ion-tabs ion-content.ion-padding {
+  --padding-bottom: 80px;
+}
+
+/* Admin dashboard — plein écran mobile */
+.ion-page app-admin-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  background: var(--ion-background-color);
+}
+
+.ion-page app-admin-shell ion-content.admin-content {
+  --offset-bottom: 0 !important;
+  --padding-bottom: 0 !important;
+  --background: var(--ion-background-color);
+  flex: 1;
+  min-height: 0;
+}
+
+/* Status Bar */
+ion-app {
+  --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-end: env(safe-area-inset-right);
+  --ion-safe-area-bottom: env(safe-area-inset-bottom);
+  --ion-safe-area-start: env(safe-area-inset-left);
+}
+
+/* Cooking wizard modal — styles globaux (ion-modal hors encapsulation) */
+.cooking-wizard-modal ion-footer.cooking-wizard-footer ion-toolbar {
+  --background: #ffffff;
+  --color: #1a1a1a;
+  --border-width: 0;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+
+.cooking-wizard-modal .wizard-footer-actions {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+.cooking-wizard-modal .wizard-next-ion-btn {
+  flex: 1;
+  margin: 0;
+  --border-radius: 14px;
+  font-weight: 800;
+  min-height: 52px;
+}
+
+.cooking-wizard-modal .wizard-back-ion-btn {
+  flex-shrink: 0;
+  min-width: 100px;
+  margin: 0;
+}
+
+.cooking-wizard-modal ion-header ion-toolbar[color="light"] {
+  --background: #ffffff;
+  --color: #1a1a1a;
+}
+

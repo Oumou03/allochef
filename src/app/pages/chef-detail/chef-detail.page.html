@@ -1,0 +1,186 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar class="premium-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ chef?.name || 'Chef' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="chef-detail-content">
+  <!-- Chargement -->
+  <div *ngIf="loading" class="chef-loading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement du profil...</p>
+  </div>
+
+  <!-- Chef introuvable -->
+  <div *ngIf="!loading && !chef" class="chef-empty">
+    <ion-icon name="restaurant-outline"></ion-icon>
+    <h2>Chef introuvable</h2>
+    <p>Ce profil n'existe pas ou n'est plus disponible.</p>
+  </div>
+
+  <!-- Profil chef -->
+  <div class="chef-detail-wrapper" *ngIf="!loading && chef">
+
+    <!-- Carte héro -->
+    <section class="chef-hero-card">
+      <img class="chef-avatar" [src]="chef.avatar || 'assets/placeholder.jpg'" [alt]="chef.name" />
+      <div class="chef-hero-body">
+        <div class="chef-name-row">
+          <h1>{{ chef.name }}</h1>
+          <ion-icon *ngIf="chef.is_verified" name="checkmark-circle" class="verified-icon"></ion-icon>
+        </div>
+        <p class="chef-specialty">{{ chef.specialty }}</p>
+        <p class="chef-bio" *ngIf="chef.bio">{{ chef.bio }}</p>
+        <p class="chef-meta">{{ getMemberSinceLabel(chef.created_at) }}</p>
+
+        <!-- Bouton Suivre (visible si pas son propre profil) -->
+        <ion-button
+          *ngIf="!isOwnProfile"
+          class="chef-follow-btn"
+          [fill]="isFollowingChef ? 'solid' : 'outline'"
+          [color]="isFollowingChef ? 'primary' : 'primary'"
+          [disabled]="loadingFollowState"
+          (click)="toggleFollow($event)"
+        >
+          <ion-icon slot="start" [name]="isFollowingChef ? 'person-remove-outline' : 'person-add-outline'"></ion-icon>
+          {{ isFollowingChef ? 'Abonné ✓' : 'Suivre' }}
+        </ion-button>
+
+        <!-- Badge propre profil -->
+        <div *ngIf="isOwnProfile" class="own-profile-badge">
+          <ion-icon name="star-outline"></ion-icon>
+          Votre profil chef
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistiques -->
+    <section class="chef-stats-grid">
+      <!-- Abonnés (cliquable si propre profil) -->
+      <div
+        class="chef-stat-card"
+        [class.clickable-stat]="isOwnProfile"
+        (click)="isOwnProfile ? openFollowersModal($event) : null"
+      >
+        <ion-icon name="people-outline"></ion-icon>
+        <strong>{{ followersCount }}</strong>
+        <span>Abonnés</span>
+        <span *ngIf="isOwnProfile" class="stat-hint">Voir liste</span>
+      </div>
+
+      <div class="chef-stat-card">
+        <ion-icon name="book-outline"></ion-icon>
+        <strong>{{ sauces.length }}</strong>
+        <span>Sauces</span>
+      </div>
+
+      <div class="chef-stat-card">
+        <ion-icon name="eye-outline"></ion-icon>
+        <strong>{{ totalViews }}</strong>
+        <span>Vues</span>
+      </div>
+
+      <div class="chef-stat-card">
+        <ion-icon name="heart-outline"></ion-icon>
+        <strong>{{ totalLikes }}</strong>
+        <span>Likes</span>
+      </div>
+
+      <div class="chef-stat-card">
+        <ion-icon name="chatbubble-outline"></ion-icon>
+        <strong>{{ totalComments }}</strong>
+        <span>Commentaires</span>
+      </div>
+    </section>
+
+    <!-- Sauces publiées -->
+    <section class="chef-sauces-section">
+      <div class="section-header">
+        <h2>Ses sauces</h2>
+        <span>{{ sauces.length }} sauce{{ sauces.length !== 1 ? 's' : '' }}</span>
+      </div>
+
+      <div *ngIf="!sauces.length" class="chef-sauces-empty">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <p *ngIf="!isOwnProfile">Ce chef n'a pas encore publié de sauce.</p>
+        <p *ngIf="isOwnProfile">Vous n'avez pas encore de sauce. Ajoutez-en une depuis votre espace chef !</p>
+      </div>
+
+      <div class="chef-sauces-grid" *ngIf="sauces.length">
+        <article
+          class="chef-sauce-card"
+          *ngFor="let sauce of sauces"
+          (click)="openSauce(sauce)"
+        >
+          <div class="chef-sauce-image">
+            <img [src]="sauce.image_url || 'assets/placeholder.jpg'" [alt]="sauce.title" />
+            <!-- Badge statut (visible si propre profil) -->
+            <span
+              *ngIf="isOwnProfile && sauce.status && sauce.status !== 'published'"
+              class="sauce-status-badge"
+              [class.status-pending]="sauce.status === 'pending'"
+              [class.status-rejected]="sauce.status === 'rejected'"
+            >
+              {{ getSauceStatusLabel(sauce.status) }}
+            </span>
+          </div>
+          <div class="chef-sauce-body">
+            <span class="chef-sauce-category">{{ getCategoryLabel(sauce.category) }}</span>
+            <h3>{{ sauce.title }}</h3>
+            <p *ngIf="sauce.description">{{ sauce.description }}</p>
+            <div class="chef-sauce-meta">
+              <span><ion-icon name="time-outline"></ion-icon> {{ sauce.duration || 30 }} min</span>
+              <span><ion-icon name="eye-outline"></ion-icon> {{ sauce.views || 0 }}</span>
+              <span><ion-icon name="heart-outline"></ion-icon> {{ sauce.likes || 0 }}</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal : Liste des abonnés (chef connecté uniquement) -->
+  <ion-modal [isOpen]="showFollowersModal" (didDismiss)="closeFollowersModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Mes abonnés ({{ followers.length }})</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeFollowersModal()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="followers-modal-content">
+        <div *ngIf="loadingFollowers" class="followers-loading">
+          <ion-spinner name="crescent" color="primary"></ion-spinner>
+          <p>Chargement des abonnés...</p>
+        </div>
+
+        <div *ngIf="!loadingFollowers && !followers.length" class="followers-empty">
+          <ion-icon name="people-outline"></ion-icon>
+          <p>Personne ne vous suit encore.</p>
+          <p class="followers-empty-hint">Partagez votre profil pour attirer des abonnés !</p>
+        </div>
+
+        <div *ngIf="!loadingFollowers && followers.length" class="followers-list">
+          <div class="follower-item" *ngFor="let follower of followers">
+            <img
+              class="follower-avatar"
+              [src]="follower.avatar || 'assets/placeholder.jpg'"
+              [alt]="follower.name"
+            />
+            <div class="follower-info">
+              <strong>{{ follower.name }}</strong>
+              <span *ngIf="follower.email">{{ follower.email }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

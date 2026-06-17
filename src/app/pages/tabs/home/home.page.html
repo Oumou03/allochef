@@ -1,0 +1,240 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar class="premium-toolbar">
+    <div class="header-content">
+      <div class="brand-logo-header">
+        <span class="logo-icon-mini"></span>
+        <h2>Allo<span>Chef</span></h2>
+      </div>
+      <div class="header-actions">
+        <ion-button fill="clear" (click)="navigateToNotifications()" class="notification-btn">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <span class="notification-badge"></span>
+        </ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content">
+  <!-- Modern Search Bar -->
+  <div class="search-section">
+    <ion-searchbar 
+      placeholder="Rechercher plats, ingrédients, chefs..."
+      [(ngModel)]="searchTerm"
+      (ionInput)="onSearchInput($event)"
+      (click)="navigateToSearch()"
+      class="premium-search"
+    ></ion-searchbar>
+  </div>
+
+  <!-- AI Gastronomic Assistant Section -->
+  <div class="ai-recommendation-card-wrapper">
+    <div class="ai-recommendation-card">
+      <div class="ai-card-header">
+        <span class="ai-badge-glowing">
+          <ion-icon name="sparkles"></ion-icon> Assistant IA Culinaire
+        </span>
+        <h3>Une envie ? L'IA AlloChef vous suggère la recette et l'avis idéal !</h3>
+      </div>
+      
+      <div class="ai-input-box">
+        <input 
+          type="text" 
+          placeholder="Ex: poulet, oignon, arachide..."
+          [(ngModel)]="aiInput"
+          (keydown.enter)="handleGetAiRecommendation()"
+        />
+        <button class="ai-submit-btn" (click)="handleGetAiRecommendation()">
+          <ion-icon name="chatbubble-ellipses"></ion-icon>
+        </button>
+      </div>
+
+      <div class="ai-suggestions-quick">
+        <span>Suggestions rapides :</span>
+        <div class="quick-tags">
+          <button (click)="aiInput = 'Poulet Yassa'; handleGetAiRecommendation('Poulet Yassa')">🍗 Poulet Yassa</button>
+          <button (click)="aiInput = 'Mafé'; handleGetAiRecommendation('Mafé')">🥜 Mafé Signature</button>
+          <button (click)="aiInput = 'Sauce Avocat'; handleGetAiRecommendation('Sauce Avocat')">🥑 Sauce Avocat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TikTok Food Reels Section -->
+  <div class="section-container">
+    <div class="section-header">
+      <h3>TikTok Food Reels</h3>
+      <span class="see-all">Tendance</span>
+    </div>
+    <div class="tiktok-horizontal-scroll">
+      <div *ngFor="let rec of recipes" class="tiktok-mini-card" (click)="goToRecipe(rec.id)">
+        <img [src]="rec.image_url" [alt]="rec.title" />
+        <div class="tiktok-overlay">
+          <div class="play-icon-wrapper">
+            <ion-icon name="play-circle"></ion-icon>
+          </div>
+          <div class="tiktok-info">
+            <h4>{{ rec.title }}</h4>
+            <p>{{ '@' + rec.chef?.name }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Section -->
+  <div class="section-container">
+    <div class="section-header">
+      <h3>Catégories Culinaires</h3>
+    </div>
+    <div class="categories-scroll">
+      <div class="category-tag active"> Tout</div>
+      <div class="category-tag"> Sauces Épicées</div>
+      <div class="category-tag"> Saveurs d'Afrique</div>
+      <div class="category-tag"> Recettes Rapides</div>
+      <div class="category-tag"> Masterclass</div>
+    </div>
+  </div>
+
+  <!-- Popular Recipes Section -->
+  <div class="section-container">
+    <div class="section-header">
+      <h3>Recettes Populaires</h3>
+      <span class="see-all">Voir tout</span>
+    </div>
+
+    <div class="recipes-grid">
+      <div *ngFor="let rec of recipes" class="recipe-premium-card" (click)="goToRecipe(rec.id)">
+        <div class="card-image-wrapper">
+          <img [src]="rec.image_url" [alt]="rec.title" />
+          <button 
+            class="favorite-btn" [class.active]="favorites.includes(rec.id)"
+            (click)="toggleFavorite(rec.id, $event)"
+          >
+            <ion-icon [name]="favorites.includes(rec.id) ? 'heart' : 'heart-outline'"></ion-icon>
+          </button>
+          <div class="difficulty-badge">{{ rec.difficulty }}</div>
+        </div>
+        <div class="card-body">
+          <div class="chef-row">
+            <img [src]="rec.chef?.avatar" [alt]="rec.chef?.name" class="chef-avatar-mini" />
+            <span>{{ rec.chef?.name }}</span>
+          </div>
+          <h4>{{ rec.title }}</h4>
+          <div class="card-meta">
+            <div class="meta-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ rec.duration }} min</span>
+            </div>
+            <div class="meta-item">
+              <ion-icon name="flame"></ion-icon>
+              <span>{{ rec.views }} vues</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Chefs Section -->
+  <div class="section-container chefs-section">
+    <div class="section-header">
+      <h3>Nos Chefs Professionnels</h3>
+      <span class="see-all" (click)="navigateToChefs()" style="cursor: pointer;">Découvrir</span>
+    </div>
+
+    <div class="chefs-horizontal-scroll">
+      <div *ngFor="let chef of chefs" class="chef-card" (click)="goToChef(chef.id)">
+        <div class="chef-card-image">
+          <img [src]="chef.avatar" [alt]="chef.name" />
+          <ion-icon *ngIf="chef.isVerified" name="checkmark-circle-sharp" class="verified-badge"></ion-icon>
+        </div>
+        <h4>{{ chef.name }}</h4>
+        <p>{{ chef.specialty }}</p>
+        <span>{{ chef.followers }} abonnés</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium Banner -->
+  <div class="premium-banner-container">
+    <div class="premium-banner-card">
+      <div class="banner-content">
+        <h3>Devenez Membre Premium</h3>
+        <p>Débloquez toutes les recettes exclusives de sauces et obtenez l'assistant IA de cuisine !</p>
+        <ion-button class="banner-btn" fill="clear" (click)="requireAuthPremium()">Découvrir l'offre 🚀</ion-button>
+      </div>
+      <div class="banner-emoji"></div>
+    </div>
+  </div>
+
+  <!-- AI Recommendations & Reviews Modal -->
+  <ion-modal [isOpen]="showAiModal" (didDismiss)="showAiModal = false" class="ai-modal-premium">
+    <ng-template>
+      <div class="ai-modal-wrapper">
+        <div class="ai-modal-header">
+          <div class="header-title-flex">
+            <ion-icon name="sparkles" class="ai-glow"></ion-icon>
+            <h3>AlloChef IA Gastronomique</h3>
+          </div>
+          <button class="ai-close-btn" (click)="showAiModal = false">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+
+        <div class="ai-modal-content">
+          <div *ngIf="aiLoading" class="ai-loading-container">
+            <div class="ai-loader-spinner"></div>
+            <p>L'IA AlloChef analyse les ingrédients et prépare vos suggestions culinaires...</p>
+          </div>
+          
+          <div *ngIf="!aiLoading && aiResult" class="ai-result-view">
+            <span class="success-badge-glowing"> Recette Suggérée par l'IA</span>
+            <h2>{{ aiResult.title }}</h2>
+            <p class="ai-desc">{{ aiResult.description }}</p>
+
+            <div class="ai-quick-stats">
+              <div class="ai-stat-item">
+                <span>Difficulté</span>
+                <strong>{{ aiResult.difficulty }}</strong>
+              </div>
+              <div class="ai-stat-item">
+                <span>Temps</span>
+                <strong>{{ aiResult.duration }} min</strong>
+              </div>
+              <div class="ai-stat-item">
+                <span>Score Nutrition</span>
+                <strong class="nutrition-glow">{{ aiResult.nutritionScore }}</strong>
+              </div>
+            </div>
+
+            <div class="ai-section">
+              <h4 Ingrédients Conseillés</h4>
+              <ul class="ai-ingredients-list">
+                <li *ngFor="let ing of aiResult.ingredients"> {{ ing }}</li>
+              </ul>
+            </div>
+
+            <div class="ai-section expert-review-box">
+              <h4> Avis de l'IA Gastronomique</h4>
+              <p>{{ aiResult.expertReview }}</p>
+            </div>
+
+            <ion-button 
+              expand="block" 
+              color="primary" 
+              class="ai-action-btn"
+              (click)="saveAiSuggestion()"
+            >
+              Enregistrer la suggestion
+            </ion-button>
+          </div>
+          
+          <div *ngIf="!aiLoading && !aiResult" class="ai-empty">
+            Entrez une description pour obtenir des avis culinaires personnalisés.
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>

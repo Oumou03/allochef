@@ -1,0 +1,76 @@
+<ion-content [fullscreen]="true" class="auth-content chef-theme">
+  <div class="auth-container">
+    <!-- Retour -->
+    <button type="button" class="back-to-home-link" (click)="goToLogin()">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+      Connexion Élève
+    </button>
+
+    <!-- Header -->
+    <div class="auth-header">
+      <span class="auth-logo">AlloChef PRO</span>
+      <h2>Espace Recrutement & Créateur</h2>
+      <p>Connectez-vous pour publier vos recettes, sauces secrètes et suivre vos élèves.</p>
+    </div>
+
+    <!-- Formulaire -->
+    <form (ngSubmit)="handleLogin()" class="auth-form">
+      <!-- Email -->
+      <div class="input-group">
+        <label>Adresse Email Professionnelle</label>
+        <div class="input-wrapper">
+          <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+          <ion-input 
+            type="email" 
+            placeholder="chef.nom@allochef.com" 
+            [(ngModel)]="email"
+            name="email"
+            inputmode="email"
+            autocomplete="email"
+            required 
+          ></ion-input>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <div class="label-row">
+          <label>Mot de passe</label>
+          <button type="button" class="forgot-link" (click)="handleForgotPassword()">Oublié ?</button>
+        </div>
+        <div class="input-wrapper">
+          <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+          <ion-input 
+            type="password" 
+            placeholder="••••••••" 
+            [(ngModel)]="password"
+            name="password"
+            required 
+          ></ion-input>
+        </div>
+      </div>
+
+      <!-- Bouton -->
+      <ion-button type="submit" expand="block" class="submit-btn chef-gold" [disabled]="loading">
+        {{ loading ? 'Connexion...' : 'Se connecter comme Chef' }}
+        <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      </ion-button>
+    </form>
+
+    <div class="auth-divider">
+      <span>OU</span>
+    </div>
+
+    <ion-button fill="outline" expand="block" class="google-btn" (click)="handleGoogleLogin()" [disabled]="loading">
+      <ion-icon name="logo-google" slot="start"></ion-icon> Continuer avec Google
+    </ion-button>
+
+    <!-- Footer -->
+    <div class="auth-footer">
+      <p>
+        Vous souhaitez rejoindre notre académie ? 
+        <button type="button" class="auth-link" (click)="goToRegisterChef()">Postuler en tant que Chef</button>
+      </p>
+    </div>
+  </div>
+</ion-content>

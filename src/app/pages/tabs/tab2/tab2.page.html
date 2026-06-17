@@ -1,0 +1,105 @@
+<ion-header class="ion-no-border premium-header">
+  <ion-toolbar class="premium-toolbar">
+    <div class="search-header-container">
+      <h2>Recherche Avancée</h2>
+      <p>Trouvez l'inspiration idéale</p>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="search-content">
+  <div class="search-input-wrapper">
+    <ion-searchbar 
+      placeholder="Plats, ingrédients, chefs..."
+      [(ngModel)]="query"
+      (ionInput)="onSearchInput($event)"
+      class="premium-search"
+    ></ion-searchbar>
+    <button 
+      class="filter-toggle-btn" 
+      [class.active]="showFilters"
+      (click)="toggleFilters()"
+    >
+      <ion-icon name="options-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel" *ngIf="showFilters">
+    <div class="filter-group">
+      <label>Difficulté</label>
+      <div class="filter-options">
+        <button
+          *ngFor="let level of ['Facile', 'Moyen', 'Avancé']"
+          class="filter-btn" 
+          [class.active]="selectedDifficulty === level"
+          (click)="selectDifficulty(level)"
+        >
+          {{ level }}
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label>Temps de préparation maximal</label>
+      <div class="filter-options">
+        <button
+          *ngFor="let item of durationOptions"
+          class="filter-btn" 
+          [class.active]="selectedDuration === item.value"
+          (click)="selectDuration(item.value)"
+        >
+          {{ item.label }}
+        </button>
+      </div>
+    </div>
+
+    <button 
+      *ngIf="selectedDifficulty || selectedDuration || query" 
+      class="clear-filters-btn" 
+      (click)="handleClearFilters()"
+    >
+      Réinitialiser les filtres
+    </button>
+  </div>
+
+  <!-- Search Results -->
+  <div class="results-container">
+    <div class="results-meta">
+      <h3>{{ filteredRecipes.length }} {{ filteredRecipes.length > 1 ? 'résultats trouvés' : 'résultat trouvé' }}</h3>
+    </div>
+
+    <div class="results-grid" *ngIf="filteredRecipes.length > 0">
+      <div *ngFor="let rec of filteredRecipes" class="search-result-card" (click)="goToRecipe(rec.id, rec.source)">
+        <img [src]="rec.image_url" [alt]="rec.title" />
+        <div class="result-info">
+          <div class="result-header">
+            <h4>{{ rec.title }}</h4>
+            <button 
+              class="card-fav-btn" 
+              [class.active]="favorites.includes(rec.id)"
+              (click)="toggleFavorite(rec.id, $event)"
+            >
+              <ion-icon [name]="favorites.includes(rec.id) ? 'heart' : 'heart-outline'"></ion-icon>
+            </button>
+          </div>
+          <p class="result-chef">Par {{ rec.chef?.name }}</p>
+          
+          <div class="result-meta">
+            <span class="badge-duration">
+              <ion-icon name="time-outline"></ion-icon> {{ rec.duration }} min
+            </span>
+            <span class="badge-difficulty">{{ rec.difficulty }}</span>
+            <span *ngIf="rec.source === 'sauce'" class="badge-difficulty" style="background: #ff8c00; color: white;">🍲 Sauce</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="empty-results" *ngIf="filteredRecipes.length === 0">
+      <span class="empty-icon"></span>
+      <h4>Aucune recette trouvée</h4>
+      <p>Essayez de modifier vos filtres ou de chercher d'autres termes comme "Yassa", "Mafé" ou "Sauce".</p>
+    </div>
+  </div>
+</ion-content>

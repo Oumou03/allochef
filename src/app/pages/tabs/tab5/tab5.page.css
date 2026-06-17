@@ -1,0 +1,456 @@
+.profile-header-container {
+  padding: 12px 16px 4px 16px;
+}
+
+.profile-header-container h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--ion-text-color);
+}
+
+.profile-content {
+  --background: var(--ion-background-color);
+}
+
+.profile-wrapper {
+  padding: 0 16px 24px 16px;
+}
+
+/* User Card */
+.user-profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--premium-glass-bg);
+  border: 1px solid var(--premium-glass-border);
+  border-radius: var(--premium-border-radius-lg);
+  padding: 24px 16px;
+  box-shadow: var(--premium-glass-shadow);
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.user-avatar-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 12px;
+}
+
+.user-avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--ion-color-primary);
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.2);
+}
+
+.premium-status-badge {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--premium-gradient-primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-profile-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 4px 0;
+  color: var(--ion-text-color);
+}
+
+.user-email {
+  font-size: 13px;
+  color: var(--ion-color-medium);
+  margin: 0 0 12px 0;
+  font-weight: 500;
+}
+
+.user-bio {
+  font-size: 13px;
+  color: var(--ion-text-color);
+  opacity: 0.8;
+  margin: 0;
+  line-height: 1.4;
+  font-style: italic;
+  max-width: 320px;
+}
+
+/* Cooking Stats */
+.profile-stats-row {
+  display: flex;
+  background: var(--premium-glass-bg);
+  border: 1px solid var(--premium-glass-border);
+  border-radius: var(--premium-border-radius-md);
+  padding: 16px 8px;
+  box-shadow: var(--premium-glass-shadow);
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-box:not(:last-child) {
+  border-right: 1px solid var(--ion-color-step-100, #f0f0f0);
+}
+
+.stat-num {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ion-color-primary);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--ion-color-medium);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.sauce-form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.sauce-recipe-summary {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px dashed var(--premium-glass-border);
+  background: var(--premium-glass-bg);
+}
+
+.sauce-recipe-summary.ready {
+  border-style: solid;
+  border-color: rgba(30, 142, 90, 0.35);
+  background: rgba(30, 142, 90, 0.08);
+}
+
+.sauce-recipe-summary-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  color: var(--ion-color-secondary);
+}
+
+.sauce-recipe-summary-head ion-icon {
+  font-size: 18px;
+}
+
+.sauce-recipe-summary p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ion-text-color);
+  line-height: 1.4;
+}
+
+.sauce-recipe-empty {
+  color: var(--ion-color-medium) !important;
+  font-style: italic;
+}
+
+.sauce-media-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--premium-glass-border);
+  border-radius: 14px;
+  background: var(--premium-glass-bg);
+}
+
+.sauce-media-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ion-text-color);
+}
+
+.sauce-media-label ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 18px;
+}
+
+.sauce-media-preview {
+  width: 100%;
+  max-height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.sauce-media-preview img {
+  width: 100%;
+  height: 100%;
+  max-height: 180px;
+  object-fit: cover;
+}
+
+.sauce-media-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+}
+
+.sauce-media-list {
+  display: grid;
+  gap: 8px;
+}
+
+.sauce-media-list-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+}
+
+.sauce-media-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 122, 0, 0.08);
+  border: 1px solid rgba(255, 122, 0, 0.2);
+  font-size: 13px;
+}
+
+.sauce-media-chip.pending {
+  background: rgba(30, 142, 90, 0.08);
+  border-color: rgba(30, 142, 90, 0.25);
+}
+
+.sauce-media-chip button {
+  border: none;
+  background: transparent;
+  color: var(--ion-color-medium);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.chef-sauces-modal {
+  --height: 92%;
+  --border-radius: 20px 20px 0 0;
+}
+
+.sauces-list-loading,
+.sauces-list-empty {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  color: var(--ion-color-medium);
+}
+
+.chef-sauce-manage-list {
+  display: grid;
+  gap: 14px;
+  padding-bottom: 16px;
+}
+
+.chef-sauce-manage-card {
+  border: 1px solid var(--premium-glass-border);
+  border-radius: 16px;
+  background: var(--premium-glass-bg);
+  padding: 14px;
+  box-shadow: var(--premium-glass-shadow);
+}
+
+.chef-sauce-manage-main {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.chef-sauce-manage-main img {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.chef-sauce-manage-main h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.chef-sauce-manage-main p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+.chef-sauce-manage-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.sauce-comments-panel {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--premium-glass-border);
+}
+
+.sauce-comments-empty {
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+.sauce-comments-preview {
+  margin-top: 6px;
+  display: grid;
+  gap: 4px;
+}
+
+.sauce-comments-preview p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  white-space: normal;
+}
+
+/* Settings Sections */
+.profile-section-title {
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.level-indicator-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(30, 142, 90, 0.04);
+  border: 1px solid rgba(30, 142, 90, 0.1);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 24px;
+}
+
+.level-icon-badge {
+  font-size: 28px;
+  background: rgba(30, 142, 90, 0.1);
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.level-indicator-card h4 {
+  font-size: 15px;
+  font-weight: 750;
+  margin: 0 0 4px 0;
+  color: var(--ion-color-secondary);
+}
+
+.level-indicator-card p {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Settings Items */
+.settings-options-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--premium-glass-bg);
+  border: 1px solid var(--premium-glass-border);
+  border-radius: var(--premium-border-radius-md);
+  box-shadow: var(--premium-glass-shadow);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.setting-item:not(:last-child) {
+  border-bottom: 1px solid var(--ion-color-step-100, #f0f0f0);
+}
+
+.setting-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.setting-icon {
+  font-size: 22px;
+  color: var(--ion-color-medium);
+}
+
+.setting-icon.dark-mode {
+  color: var(--ion-color-primary);
+}
+
+.setting-icon.premium {
+  color: var(--ion-color-primary);
+}
+
+.setting-item span {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--ion-text-color);
+}
+
+.chevron-right {
+  font-size: 16px;
+  color: var(--ion-color-step-300, #cccccc);
+}
+
+.premium-pill-active {
+  background: rgba(255, 122, 0, 0.1);
+  color: var(--ion-color-primary);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.logout-btn {
+  --color: var(--ion-color-danger);
+  font-weight: 700;
+  font-size: 14px;
+}

@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nos Chefs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding chefs-content">
+  <div class="chefs-header">
+    <h2>Chefs professionnels</h2>
+    <p>Découvrez tous les chefs de l'académie AlloChef et leurs spécialités.</p>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="spinner-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement des chefs...</p>
+  </div>
+
+  <!-- Sort Controls -->
+  <div *ngIf="!loading" class="sort-controls">
+    <button [class.active]="sortBy === 'followers'" (click)="setSortBy('followers')">
+      <ion-icon name="people-outline"></ion-icon> Abonnés
+    </button>
+    <button [class.active]="sortBy === 'sauces'" (click)="setSortBy('sauces')">
+      <ion-icon name="flame"></ion-icon> Sauces
+    </button>
+    <button [class.active]="sortBy === 'name'" (click)="setSortBy('name')">
+      Nom A-Z
+    </button>
+  </div>
+
+  <!-- Chefs Grid -->
+  <div *ngIf="!loading" class="chefs-grid">
+    <div *ngFor="let chef of chefs" class="chef-card" (click)="goToChef(chef.id)">
+      <div class="chef-image-wrapper">
+        <img [src]="chef.avatar" [alt]="chef.name" />
+        <ion-icon
+          *ngIf="chef.is_verified"
+          name="checkmark-circle-sharp"
+          class="verified-badge"
+        ></ion-icon>
+      </div>
+      <div class="chef-info">
+        <h3>{{ chef.name }}</h3>
+        <p class="specialty">{{ chef.specialty }}</p>
+        <div class="chef-stats">
+          <div class="stat">
+            <ion-icon name="people-outline"></ion-icon>
+            <span>{{ chef.followers ?? 0 }} abonnés</span>
+          </div>
+          <div class="stat">
+            <ion-icon name="flame"></ion-icon>
+            <span>{{ chef.sauceCount ?? 0 }} sauces</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && chefs.length === 0" class="empty-state">
+    <p>Aucun chef disponible pour le moment.</p>
+  </div>
+</ion-content>

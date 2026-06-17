@@ -1,0 +1,36 @@
+<app-admin-shell title="Chefs" section="chefs" [loading]="loading" (refresh)="loadChefs()">
+  <div class="admin-card-list" *ngIf="chefs.length; else emptyChefs">
+    <div class="admin-card" *ngFor="let chef of chefs">
+      <img class="admin-avatar" [src]="chef.avatar || 'assets/placeholder.jpg'" [alt]="chef.name" />
+      <div class="admin-card-body">
+        <h2>{{ chef.name }}</h2>
+        <p>{{ chef.specialty }}</p>
+        <p>{{ chef.user?.email }}</p>
+        <div class="admin-card-meta">
+          <span class="admin-badge" [class.success]="chef.is_verified" [class.warning]="!chef.is_verified">
+            {{ chef.is_verified ? 'Validé' : 'En attente' }}
+          </span>
+        </div>
+      </div>
+      <div class="admin-card-actions">
+        <ion-button
+          size="small"
+          fill="outline"
+          [color]="chef.is_verified ? 'medium' : 'success'"
+          (click)="toggleVerify(chef)"
+        >
+          <ion-icon [name]="chef.is_verified ? 'close-outline' : 'shield-checkmark-outline'" slot="start"></ion-icon>
+          {{ chef.is_verified ? 'Retirer' : 'Valider' }}
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyChefs>
+    <div class="admin-empty">
+      <ion-icon name="restaurant-outline"></ion-icon>
+      <h3>Aucun chef</h3>
+      <p>Les profils chefs inscrits apparaîtront ici.</p>
+    </div>
+  </ng-template>
+</app-admin-shell>

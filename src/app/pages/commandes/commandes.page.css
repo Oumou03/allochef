@@ -1,0 +1,160 @@
+.commandes-content {
+  --background: var(--ion-background-color);
+  --padding-bottom: 120px;
+}
+
+.commandes-page {
+  padding: 16px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+.commandes-hero {
+  margin-bottom: 20px;
+}
+
+.commandes-kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--ion-color-primary);
+}
+
+.commandes-hero h1 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.commandes-sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+.commandes-empty-hint {
+  text-align: center;
+  color: var(--ion-color-medium);
+  padding: 24px 12px;
+}
+
+.commandes-loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.commandes-select-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.commandes-list {
+  display: grid;
+  gap: 10px;
+}
+
+.commande-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--premium-glass-border);
+  background: var(--premium-glass-bg);
+  box-shadow: var(--premium-glass-shadow);
+}
+
+.commande-item.selected {
+  border-color: rgba(255, 122, 0, 0.45);
+  background: rgba(255, 122, 0, 0.06);
+}
+
+.commande-item-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.commande-item-body strong {
+  font-size: 15px;
+}
+
+.commande-item-body span {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+}
+
+.commande-price {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ion-color-primary);
+  white-space: nowrap;
+}
+
+.commandes-footer ion-toolbar {
+  --background: var(--premium-glass-bg);
+  --border-width: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid var(--premium-glass-border);
+}
+
+.commandes-footer-inner {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.commandes-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.commandes-total strong {
+  font-size: 18px;
+  color: var(--ion-color-primary);
+}
+
+.history-title {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.history-card {
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  border: 1px solid var(--premium-glass-border);
+  background: var(--premium-glass-bg);
+}
+
+.history-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.history-total {
+  color: var(--ion-color-primary);
+  font-weight: 800;
+}
+
+.history-status {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 122, 0, 0.12);
+  color: var(--ion-color-primary);
+}

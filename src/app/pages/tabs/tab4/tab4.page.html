@@ -1,0 +1,67 @@
+﻿<ion-header class="ion-no-border premium-header">
+  <ion-toolbar class="premium-toolbar">
+    <div class="favs-header-container">
+      <h2>Mes Favoris</h2>
+      <p>Vos recettes et collections enregistrées</p>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="favs-content">
+  <div class="empty-favs" *ngIf="loading">
+    <ion-spinner name="crescent" style="margin-bottom: 16px;"></ion-spinner>
+    <p>Chargement de vos favoris...</p>
+  </div>
+
+  <div class="favs-container" *ngIf="!loading && favoriteRecipes.length > 0">
+    <!-- Playlists / Collections -->
+    <div class="collections-section">
+      <h3>Vos Playlists</h3>
+      <div class="collections-scroll">
+        <div class="collection-card active">
+          <span class="col-emoji"></span>
+          <div>
+            <h4>Sauces Secrètes</h4>
+            <p>{{ getSecretSauceCount() }} vidéos</p>
+          </div>
+        </div>
+        <div class="collection-card">
+          <span class="col-emoji"></span>
+          <div>
+            <h4>Plats de Fête</h4>
+            <p>0 vidéo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- List of Favorites -->
+    <div class="favorites-list-section">
+      <h3>Toutes vos recettes enregistrées</h3>
+      <div class="favs-list">
+        <div *ngFor="let recipe of favoriteRecipes" class="fav-recipe-row" (click)="goToRecipe(recipe.id, recipe.source)">
+          <img [src]="recipe.image_url" [alt]="recipe.title" />
+          <div class="fav-info">
+            <div class="fav-header">
+              <h4>{{ recipe.title }}</h4>
+              <button class="fav-remove-btn" (click)="removeFavorite(recipe, $event)">
+                <ion-icon name="heart"></ion-icon>
+              </button>
+            </div>
+            <p class="fav-chef">Chef {{ recipe.chef?.name || 'Inconnu' }}</p>
+            <div class="fav-meta">
+              <span><ion-icon name="time-outline"></ion-icon> {{ recipe.duration }} min</span>
+              <span><ion-icon name="flame"></ion-icon> {{ recipe.difficulty }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-favs" *ngIf="!loading && favoriteRecipes.length === 0">
+    <span class="empty-emoji"></span>
+    <h4>Aucun favori enregistré</h4>
+    <p>Parcourez les recettes sur la page d'accueil ou recherchez des plats pour les enregistrer ici.</p>
+  </div>
+</ion-content>

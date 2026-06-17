@@ -1,0 +1,80 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Commander</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="commandes-content" [fullscreen]="true">
+  <div class="commandes-page" *ngIf="activeTab === 'new'">
+    <div class="commandes-hero" *ngIf="recipeName">
+      <p class="commandes-kicker">Simulation de commande</p>
+      <h1>{{ recipeName }}</h1>
+      <p class="commandes-sub">Ingrédients définis par le chef · prix estimés en GNF</p>
+    </div>
+
+    <p *ngIf="!recipeId" class="commandes-empty-hint">Ouvrez une sauce pour commander ses ingrédients.</p>
+
+    <div *ngIf="loading" class="commandes-loading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <div *ngIf="!loading && cartItems.length" class="commandes-list">
+      <div class="commandes-select-row">
+        <ion-button size="small" fill="outline" (click)="selectAll()">Tout</ion-button>
+        <ion-button size="small" fill="outline" (click)="deselectAll()">Aucun</ion-button>
+      </div>
+
+      <div
+        class="commande-item"
+        *ngFor="let item of cartItems"
+        [class.selected]="item.selected"
+        (click)="toggleItem(item)"
+      >
+        <ion-checkbox [checked]="item.selected"></ion-checkbox>
+        <div class="commande-item-body">
+          <strong>{{ item.name }}</strong>
+          <span>{{ item.quantity }} {{ item.unit }}</span>
+        </div>
+        <span class="commande-price">{{ formatPrice(item.price) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="commandes-page" *ngIf="activeTab === 'history'">
+    <h2 class="history-title">Mes commandes</h2>
+    <p *ngIf="!orders.length" class="commandes-empty-hint">Aucune commande pour le moment.</p>
+    <div class="history-card" *ngFor="let order of orders">
+      <div class="history-card-head">
+        <strong>{{ order.recipe_name }}</strong>
+        <span class="history-total">{{ formatPrice(order.total) }}</span>
+      </div>
+      <p>{{ order.date }} · {{ order.item_count }} article{{ order.item_count !== 1 ? 's' : '' }}</p>
+      <span class="history-status">{{ getStatusLabel(order.status) }}</span>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border commandes-footer" *ngIf="activeTab === 'new' && cartItems.length">
+  <ion-toolbar>
+    <div class="commandes-footer-inner">
+      <div class="commandes-total">
+        <span>Total sélectionné</span>
+        <strong>{{ formatPrice(cartTotal) }}</strong>
+      </div>
+      <ion-button expand="block" color="primary" (click)="placeOrder()" [disabled]="placingOrder || !selectedItems.length">
+        {{ placingOrder ? 'Envoi...' : 'Passer la commande' }}
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="recipeId && activeTab === 'new'">
+  <ion-fab-button size="small" color="medium" (click)="activeTab = 'history'">
+    <ion-icon name="receipt-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

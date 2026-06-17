@@ -1,0 +1,39 @@
+:root {
+  --ion-color-primary: #ff7a00;
+  --ion-color-primary-rgb: 255, 122, 0;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #e06b00;
+  --ion-color-primary-tint: #ff871a;
+
+  --ion-color-secondary: #d4af37;
+  --ion-color-secondary-rgb: 212, 175, 55;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #bb9a30;
+  --ion-color-secondary-tint: #d8b74b;
+
+  --ion-background-color: #ffffff;
+  --ion-text-color: #1a1a1a;
+
+  --premium-glass-bg: rgba(255, 255, 255, 0.92);
+  --premium-glass-border: rgba(0, 0, 0, 0.08);
+  --premium-glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --premium-border-radius-md: 12px;
+  --premium-border-radius-lg: 20px;
+  --premium-gradient-primary: linear-gradient(135deg, #ff7a00 0%, #ff9500 100%);
+  --premium-gradient-secondary: linear-gradient(135deg, #d4af37 0%, #f0c75a 100%);
+}
+
+/* Dark Mode Variables */
+body.dark {
+  --ion-background-color: #121212;
+  --ion-text-color: #ffffff;
+  
+  --ion-color-step-100: #1e1e1e;
+  --ion-color-step-300: #444444;
+
+  --premium-glass-bg: rgba(30, 30, 30, 0.92);
+  --premium-glass-border: rgba(255, 255, 255, 0.08);
+  --premium-glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}

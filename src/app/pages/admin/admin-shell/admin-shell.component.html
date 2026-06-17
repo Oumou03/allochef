@@ -1,0 +1,77 @@
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar class="admin-toolbar-main">
+    <ion-buttons slot="start" *ngIf="section !== 'users'">
+      <ion-back-button defaultHref="/admin/users" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="admin-title-wrap">
+        <span class="admin-kicker">AlloChef Admin</span>
+        <h1>{{ title }}</h1>
+      </div>
+    </ion-title>
+    <ion-buttons slot="end" class="admin-toolbar-actions">
+      <ion-button fill="clear" class="admin-refresh-btn" (click)="handleRefresh()" [disabled]="loading">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button fill="outline" color="danger" class="admin-logout-btn" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        <span class="admin-logout-label">Déconnecter</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content
+  [fullscreen]="true"
+  [scrollY]="true"
+  [forceOverscroll]="false"
+  class="admin-content"
+>
+  <div class="admin-page">
+    <div class="admin-nav">
+      <button type="button" class="admin-nav-btn" [class.active]="section === 'users'" (click)="goTo('users')">
+        <ion-icon name="people-outline"></ion-icon> Utilisateurs
+      </button>
+      <button type="button" class="admin-nav-btn" [class.active]="section === 'chefs'" (click)="goTo('chefs')">
+        <ion-icon name="restaurant-outline"></ion-icon> Chefs
+      </button>
+      <button type="button" class="admin-nav-btn" [class.active]="section === 'sauces'" (click)="goTo('sauces')">
+        <ion-icon name="book-outline"></ion-icon> Recettes
+      </button>
+      <button type="button" class="admin-nav-btn" [class.active]="section === 'orders'" (click)="goTo('orders')">
+        <ion-icon name="cart-outline"></ion-icon> Commandes
+      </button>
+      <button type="button" class="admin-nav-btn admin-nav-logout" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon> Déconnecter
+      </button>
+    </div>
+    <div class="admin-stats-grid" *ngIf="stats">
+      <div class="admin-stat-card">
+        <span class="label">Utilisateurs</span>
+        <span class="value">{{ stats.totalUsers }}</span>
+      </div>
+      <div class="admin-stat-card">
+        <span class="label">Chefs</span>
+        <span class="value">{{ stats.totalChefs }}</span>
+      </div>
+      <div class="admin-stat-card highlight">
+        <span class="label">Chefs en attente</span>
+        <span class="value">{{ stats.pendingChefs }}</span>
+      </div>
+      <div class="admin-stat-card highlight">
+        <span class="label">Contenus à valider</span>
+        <span class="value">{{ stats.pendingContent }}</span>
+      </div>
+      <div class="admin-stat-card highlight">
+        <span class="label">Commandes en attente</span>
+        <span class="value">{{ stats.pendingOrders }}</span>
+      </div>
+    </div>
+
+    <div class="admin-skeleton-list" *ngIf="loading">
+      <div class="admin-skeleton-card" *ngFor="let i of skeletonRows"></div>
+    </div>
+
+    <ng-content *ngIf="!loading"></ng-content>
+  </div>
+</ion-content>

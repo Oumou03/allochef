@@ -1,0 +1,331 @@
+<ion-header class="ion-no-border premium-header" [class.ion-hide]="isCookingModeActive">
+  <ion-toolbar class="premium-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="backHref" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ recipe?.source === 'sauce' ? 'Sauce' : 'Recette' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="recipe-detail-content" [fullscreen]="true" [class.ion-hide]="isCookingModeActive">
+  <div *ngIf="loading" class="loading-state">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Chargement...</p>
+  </div>
+
+  <div class="recipe-detail-wrapper" *ngIf="!loading && recipe">
+    <!-- Hero Image -->
+    <div class="recipe-hero">
+      <img [src]="recipe.image_url || 'assets/placeholder.jpg'" [alt]="recipe.title" />
+      <div class="hero-overlay">
+        <span class="difficulty-pill">{{ recipe.difficulty || 'Facile' }}</span>
+      </div>
+      <button class="fav-btn" [class.active]="isFavorite" (click)="toggleFavorite()">
+        <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Info Card -->
+    <div class="recipe-info-card">
+      <span class="recipe-category-tag">{{ getCategoryLabel(recipe.category) }}</span>
+      <h1 class="recipe-title">{{ recipe.title }}</h1>
+      <p class="recipe-origin" *ngIf="recipe.source === 'sauce'">
+        Qui vient de la recette ajoutée par {{ recipe.chef?.name || 'le chef' }}
+      </p>
+      <p class="recipe-description" *ngIf="recipe.description">{{ recipe.description }}</p>
+
+      <div class="recipe-stats-row">
+        <div class="recipe-stat">
+          <ion-icon name="time-outline"></ion-icon>
+          <div>
+            <span class="stat-val">{{ recipe.duration || 45 }} min</span>
+            <span class="stat-lbl">Préparation</span>
+          </div>
+        </div>
+        <div class="recipe-stat">
+          <ion-icon name="flame-outline"></ion-icon>
+          <div>
+            <span class="stat-val">{{ recipe.difficulty || 'Facile' }}</span>
+            <span class="stat-lbl">Difficulté</span>
+          </div>
+        </div>
+        <div class="recipe-stat">
+          <ion-icon name="people-outline"></ion-icon>
+          <div>
+            <span class="stat-val">{{ recipe.base_servings || recipe.servings || 4 }}</span>
+            <span class="stat-lbl">Portions</span>
+          </div>
+        </div>
+        <div class="recipe-stat" *ngIf="recipe.source === 'sauce'">
+          <ion-icon name="thumbs-up-outline"></ion-icon>
+          <div>
+            <span class="stat-val">{{ recipe.likes || 0 }}</span>
+            <span class="stat-lbl">Likes</span>
+          </div>
+        </div>
+        <div class="recipe-stat">
+          <ion-icon name="eye-outline"></ion-icon>
+          <div>
+            <span class="stat-val">{{ recipe.views || 0 }}</span>
+            <span class="stat-lbl">Vues</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sauce-feedback-summary" *ngIf="recipe.source === 'sauce'">
+        <span>{{ recipe.likes || 0 }} personnes aiment ça</span>
+        <span class="dot-separator">·</span>
+        <span>{{ sauceComments.length }} commentaires</span>
+      </div>
+    </div>
+
+    <!-- Vidéo -->
+    <div class="recipe-section recipe-video-section" *ngIf="getVideoUrls().length">
+      <h3 class="section-title">
+        <ion-icon name="videocam-outline"></ion-icon>
+        Vidéo
+      </h3>
+      <div class="detail-video-container">
+        <video
+          [src]="detailVideoUrl"
+          controls
+          playsinline
+          class="detail-video"
+          (play)="onVideoPlay()"
+        ></video>
+      </div>
+      <div class="video-tabs" *ngIf="extractVideoUrls(recipe).length > 1">
+        <button
+          *ngFor="let url of extractVideoUrls(recipe); let i = index"
+          class="video-tab-btn"
+          [class.active]="detailVideoIndex === i"
+          (click)="selectDetailVideo(i)"
+        >
+          Vidéo {{ i + 1 }}
+        </button>
+      </div>
+      <button class="download-video-btn" (click)="downloadVideo()">
+        <ion-icon name="download-outline"></ion-icon>
+        Télécharger la vidéo
+      </button>
+    </div>
+
+    <!-- Barre d'actions type YouTube (sauce) -->
+    <div class="recipe-section yt-action-wrap" *ngIf="recipe.source === 'sauce'">
+      <div class="yt-action-bar">
+        <button type="button" class="yt-action-btn" [class.active]="isSauceLiked" (click)="toggleSauceLike()">
+          <ion-icon [name]="isSauceLiked ? 'thumbs-up' : 'thumbs-up-outline'"></ion-icon>
+          <span>{{ recipe.likes || 0 }}</span>
+        </button>
+        <button type="button" class="yt-action-btn" (click)="scrollToComments()">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+          <span>{{ sauceComments.length }}</span>
+        </button>
+        <button
+          type="button"
+          class="yt-order-chip"
+          *ngIf="recipe.ingredients?.length"
+          (click)="orderIngredients()"
+        >
+          <ion-icon name="cart-outline"></ion-icon>
+          Commander
+        </button>
+      </div>
+    </div>
+
+    <!-- Commentaires style YouTube (sauce) -->
+    <div class="recipe-section yt-comments-section" id="sauce-comments" *ngIf="recipe.source === 'sauce'">
+      <h3 class="yt-comments-title">{{ sauceComments.length }} commentaire{{ sauceComments.length !== 1 ? 's' : '' }}</h3>
+
+      <div class="yt-comment-form">
+        <div class="yt-avatar-placeholder">{{ getCommentAuthorInitial('Vous') }}</div>
+        <div class="yt-comment-input-wrap">
+          <ion-textarea
+            autoGrow="true"
+            rows="1"
+            placeholder="Ajouter un commentaire..."
+            [(ngModel)]="newComment"
+          ></ion-textarea>
+          <ion-button size="small" color="primary" (click)="submitComment()" [disabled]="savingComment || !newComment.trim()">
+            {{ savingComment ? '...' : 'Publier' }}
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="yt-comment-thread" *ngFor="let comment of sauceComments">
+        <img
+          class="yt-comment-avatar"
+          [src]="comment.user?.avatar || 'assets/placeholder.jpg'"
+          [alt]="comment.user?.name || 'Utilisateur'"
+        />
+        <div class="yt-comment-body">
+          <div class="yt-comment-head">
+            <span class="yt-author">{{ '@' + (comment.user?.name || 'utilisateur') }}</span>
+            <span class="yt-time">{{ formatCommentDate(comment.created_at) }}</span>
+          </div>
+          <p class="yt-comment-text">{{ comment.content }}</p>
+          <div class="yt-creator-reply" *ngIf="comment.chef_reply">
+            <div class="yt-comment-head">
+              <span class="yt-creator-badge">Chef</span>
+              <span class="yt-time" *ngIf="comment.chef_reply_at">{{ formatCommentDate(comment.chef_reply_at) }}</span>
+            </div>
+            <p class="yt-comment-text">{{ comment.chef_reply }}</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="empty-comments" *ngIf="!sauceComments.length">Soyez le premier à commenter cette sauce.</p>
+    </div>
+
+    <!-- Ingredients -->
+    <div class="recipe-section" *ngIf="recipe.ingredients?.length">
+      <h3 class="section-title">
+        <ion-icon name="leaf-outline"></ion-icon>
+        Ingrédients
+      </h3>
+      <ul class="ingredients-list">
+        <li *ngFor="let ing of recipe.ingredients" class="ingredient-item">
+          <span class="ing-dot"></span>
+          <div class="ingredient-content">
+            <span class="ing-name">{{ ing.name }}</span>
+            <span class="ing-qty" *ngIf="ing.quantity">{{ ing.quantity }} {{ ing.unit }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Utensils -->
+    <div class="recipe-section" *ngIf="getUtensilsList().length">
+      <h3 class="section-title">
+        <ion-icon name="construct-outline"></ion-icon>
+        Ustensiles nécessaires
+      </h3>
+      <ul class="ingredients-list">
+        <li *ngFor="let utensil of getUtensilsList()" class="ingredient-item">
+          <span class="ing-dot"></span>
+          <span class="ing-name">{{ utensil }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Steps -->
+    <div class="recipe-section" *ngIf="recipe.steps?.length">
+      <h3 class="section-title">
+        <ion-icon name="list-outline"></ion-icon>
+        Préparation
+      </h3>
+      <div class="steps-list">
+        <div *ngFor="let step of recipe.steps; let i = index" class="step-item">
+          <div class="step-num">{{ i + 1 }}</div>
+          <p class="step-text">{{ step }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compatible Dishes -->
+    <div class="recipe-section" *ngIf="recipe.compatibleDishes?.length">
+      <h3 class="section-title">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        Accords & Plats
+      </h3>
+      <div class="dishes-tags">
+        <span *ngFor="let dish of recipe.compatibleDishes" class="dish-tag">🍽 {{ dish }}</span>
+      </div>
+    </div>
+
+    <!-- Commande (recettes non-sauce) -->
+    <div class="recipe-section" *ngIf="recipe.source !== 'sauce' && recipe.ingredients?.length">
+      <button class="order-ingredients-btn" (click)="orderIngredients()">
+        <ion-icon name="cart-outline"></ion-icon>
+        Commander les ingrédients
+      </button>
+    </div>
+
+    <div style="height: 100px;"></div>
+  </div>
+
+  <div class="fixed-bottom-bar" *ngIf="!loading && recipe">
+    <button class="start-cooking-btn" (click)="startCookingMode()">
+      <ion-icon name="play-circle-outline"></ion-icon>
+      Démarrer la cuisson
+    </button>
+  </div>
+
+</ion-content>
+
+<!-- MODE CUISSON : vidéo + recette en dessous -->
+<ion-content [class.ion-hide]="!isCookingModeActive" class="active-cooking-content">
+  <div class="cooking-top-bar">
+    <button class="cooking-back-btn" (click)="endCookingMode()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <span>{{ activeSauce?.title }}</span>
+    <span class="cooking-servings-badge">{{ targetServings }} pers.</span>
+  </div>
+
+  <!-- Vidéo(s) -->
+  <div class="cooking-video-container" *ngIf="activeVideoUrl">
+    <video [src]="activeVideoUrl" controls playsinline class="cooking-video" (play)="onVideoPlay()"></video>
+  </div>
+  <div class="cooking-video-placeholder" *ngIf="!activeVideoUrl">
+    <img [src]="activeSauce?.image_url" [alt]="activeSauce?.title" />
+    <div class="placeholder-overlay">
+      <ion-icon name="videocam-outline"></ion-icon>
+      <p>Aucune vidéo disponible</p>
+    </div>
+  </div>
+
+  <div class="video-tabs" *ngIf="getVideoUrls().length > 1">
+    <button
+      *ngFor="let url of getVideoUrls(); let i = index"
+      class="video-tab-btn"
+      [class.active]="activeVideoIndex === i"
+      (click)="selectVideo(i)"
+    >
+      Vidéo {{ i + 1 }}
+    </button>
+  </div>
+
+  <button class="download-video-btn cooking-download-btn" *ngIf="activeVideoUrl" (click)="downloadVideo()">
+    <ion-icon name="download-outline"></ion-icon> Télécharger
+  </button>
+
+  <!-- Recette complète sous la vidéo -->
+  <div class="cooking-recipe-panel">
+    <div class="cooking-recipe-meta">
+      <span><ion-icon name="restaurant-outline"></ion-icon> {{ getCategoryLabel(activeSauce?.category) }}</span>
+      <span><ion-icon name="time-outline"></ion-icon> {{ activeSauce?.duration }} min</span>
+    </div>
+
+    <div class="cooking-recipe-section" *ngIf="activeSauce?.ingredients?.length">
+      <h3>Ingrédients ({{ targetServings }} personnes)</h3>
+      <ul class="cooking-ingredients-list">
+        <li *ngFor="let ing of activeSauce?.ingredients">
+          <span>{{ ing.name }}</span>
+          <strong *ngIf="ing.quantity">{{ ing.quantity }} {{ ing.unit }}</strong>
+        </li>
+      </ul>
+    </div>
+
+    <div class="cooking-recipe-section" *ngIf="getUtensilsList().length">
+      <h3>Ustensiles</h3>
+      <ul class="cooking-utensils-list">
+        <li *ngFor="let u of getUtensilsList()">{{ u }}</li>
+      </ul>
+    </div>
+
+    <div class="cooking-recipe-section" *ngIf="activeSauce?.steps?.length">
+      <h3>Préparation</h3>
+      <div class="cooking-steps-list">
+        <div *ngFor="let step of activeSauce?.steps; let i = index" class="cooking-step-item">
+          <div class="cooking-step-num">{{ i + 1 }}</div>
+          <p>{{ step }}</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="exit-cooking-btn" (click)="endCookingMode()">
+      <ion-icon name="close-outline"></ion-icon> Quitter le mode cuisson
+    </button>
+  </div>
+</ion-content>

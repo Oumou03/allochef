@@ -1,0 +1,429 @@
+.chef-detail-content {
+  --background: var(--ion-background-color);
+}
+
+.chef-loading,
+.chef-empty {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  color: var(--ion-color-medium);
+}
+
+.chef-empty ion-icon {
+  font-size: 48px;
+  color: var(--ion-color-primary);
+  margin-bottom: 12px;
+}
+
+.chef-empty h2,
+.chef-detail-wrapper h1,
+.chef-detail-wrapper h2,
+.chef-detail-wrapper h3 {
+  color: var(--ion-text-color);
+}
+
+.chef-detail-wrapper {
+  padding: 16px;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ─── Hero Card ─────────────────────────────────── */
+.chef-hero-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px;
+  border-radius: var(--premium-border-radius-lg, 18px);
+  background: var(--premium-glass-bg, rgba(255,255,255,0.05));
+  border: 1px solid var(--premium-glass-border, rgba(255,255,255,0.12));
+  box-shadow: var(--premium-glass-shadow, 0 4px 24px rgba(0,0,0,0.18));
+  margin-bottom: 16px;
+}
+
+.chef-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 122, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.chef-hero-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.chef-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chef-name-row h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.verified-icon {
+  color: var(--ion-color-primary);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.chef-specialty {
+  margin: 5px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ion-color-secondary, #ff7a00);
+}
+
+.chef-bio {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ion-color-medium);
+}
+
+.chef-meta {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--ion-color-medium);
+}
+
+.chef-follow-btn {
+  margin-top: 12px;
+  --border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.own-profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: rgba(255, 122, 0, 0.15);
+  border: 1px solid rgba(255, 122, 0, 0.35);
+  color: var(--ion-color-primary, #ff7a00);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.own-profile-badge ion-icon {
+  font-size: 14px;
+}
+
+/* ─── Stats Grid ─────────────────────────────────── */
+.chef-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 500px) {
+  .chef-stats-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.chef-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 8px;
+  border-radius: 14px;
+  background: var(--premium-glass-bg, rgba(255,255,255,0.05));
+  border: 1px solid var(--premium-glass-border, rgba(255,255,255,0.12));
+  text-align: center;
+  position: relative;
+}
+
+.chef-stat-card.clickable-stat {
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.chef-stat-card.clickable-stat:hover {
+  background: rgba(255, 122, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.chef-stat-card ion-icon {
+  font-size: 18px;
+  color: var(--ion-color-primary, #ff7a00);
+}
+
+.chef-stat-card strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ion-text-color);
+}
+
+.chef-stat-card span {
+  font-size: 10px;
+  color: var(--ion-color-medium);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.stat-hint {
+  font-size: 9px !important;
+  color: var(--ion-color-primary, #ff7a00) !important;
+  font-weight: 700 !important;
+  text-decoration: underline;
+}
+
+/* ─── Sauces Section ─────────────────────────────── */
+.chef-sauces-section .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.chef-sauces-section h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.chef-sauces-section .section-header span {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  font-weight: 700;
+}
+
+.chef-sauces-empty {
+  padding: 28px;
+  text-align: center;
+  border-radius: 14px;
+  background: var(--premium-glass-bg, rgba(255,255,255,0.05));
+  border: 1px dashed var(--premium-glass-border, rgba(255,255,255,0.12));
+  color: var(--ion-color-medium);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.chef-sauces-empty ion-icon {
+  font-size: 36px;
+  color: var(--ion-color-primary);
+  margin-bottom: 4px;
+}
+
+.chef-sauces-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.chef-sauce-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--premium-glass-bg, rgba(255,255,255,0.05));
+  border: 1px solid var(--premium-glass-border, rgba(255,255,255,0.12));
+  box-shadow: var(--premium-glass-shadow, 0 4px 20px rgba(0,0,0,0.15));
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.chef-sauce-card:hover {
+  transform: translateY(-3px);
+}
+
+.chef-sauce-image {
+  height: 150px;
+  position: relative;
+}
+
+.chef-sauce-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sauce-status-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.sauce-status-badge.status-pending {
+  background: rgba(255, 165, 0, 0.85);
+  color: #fff;
+}
+
+.sauce-status-badge.status-rejected {
+  background: rgba(220, 50, 50, 0.85);
+  color: #fff;
+}
+
+.chef-sauce-body {
+  padding: 14px;
+}
+
+.chef-sauce-category {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--ion-color-secondary, #ff7a00);
+}
+
+.chef-sauce-body h3 {
+  margin: 5px 0 7px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.chef-sauce-body p {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.chef-sauce-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  font-weight: 600;
+}
+
+.chef-sauce-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Modal Abonnés ──────────────────────────────── */
+.followers-modal-content {
+  --background: var(--ion-background-color);
+}
+
+.followers-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 12px;
+  color: var(--ion-color-medium);
+}
+
+.followers-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--ion-color-medium);
+  gap: 8px;
+}
+
+.followers-empty ion-icon {
+  font-size: 48px;
+  color: var(--ion-color-primary);
+  margin-bottom: 8px;
+}
+
+.followers-empty-hint {
+  font-size: 13px;
+  color: var(--ion-color-medium);
+  opacity: 0.7;
+}
+
+.followers-list {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.follower-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--premium-glass-bg, rgba(255,255,255,0.05));
+  border: 1px solid var(--premium-glass-border, rgba(255,255,255,0.1));
+  transition: background 0.2s;
+}
+
+.follower-item:hover {
+  background: rgba(255, 122, 0, 0.08);
+}
+
+.follower-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 122, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.follower-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.follower-info strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+}
+
+.follower-info span {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Responsive ─────────────────────────────────── */
+@media (max-width: 500px) {
+  .chef-hero-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .chef-name-row {
+    justify-content: center;
+  }
+
+  .own-profile-badge {
+    justify-content: center;
+  }
+
+  .chef-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
